@@ -1,0 +1,51 @@
+{
+    "name": "danjamesmills/laravel-dropzonejs",
+    "description": "Test",
+    "keywords": [
+        "danjamesmills",
+        "laravel-dropzonejs"
+    ],
+    "homepage": "https://github.com/danjamesmills/laravel-dropzonejs",
+    "license": "MIT",
+    "type": "library",
+    "authors": [{
+        "name": "Daniel Mills",
+        "email": "daniel620@hotmail.co.uk",
+        "role": "Developer"
+    }],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DanJamesMills\\LaravelDropzone\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DanJamesMills\\LaravelDropzone\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DanJamesMills\\LaravelDropzone\\LaravelDropzoneServiceProvider"
+            ],
+            "aliases": {
+                "LaravelDropzonejs": "DanJamesMills\\LaravelDropzone\\LaravelDropzoneFacade"
+            }
+        }
+    }
+}

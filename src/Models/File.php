@@ -52,7 +52,7 @@ class File extends Model
 
     public function downloadFile()
     {
-        return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename());
+        return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename(), $this->original_filename);
     }
 
     public function getFormatSizeUnitsAttribute()

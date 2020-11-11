@@ -7,7 +7,7 @@ Route::namespace('DanJamesMills\LaravelDropzone\Http\Controllers')->group(functi
     Route::post('uploader/file/delete', 'FileUploadController@destroy')
         ->name('uploader.destroy');
 
-    Route::get('uploader/file/{token}/download', 'FileDownloadController@download')
+    Route::get('file/{token}/download', 'FileDownloadController@download')
         ->name('uploader.download');
 
     Route::get('uploader/{uploadType}/settings', 'UploadTypeSettingController@show')

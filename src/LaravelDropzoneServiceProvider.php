@@ -15,8 +15,9 @@ class LaravelDropzoneServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-dropzone');
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         Blade::component('laravel-dropzone', LaravelDropzone::class);
 
@@ -38,7 +39,7 @@ class LaravelDropzoneServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/laravel-dropzone.php' => config_path('laravel-dropzone.php'),
-        ], 'config');
+        ], 'laravel-dropzone-config');
 
         $this->publishes([
             __DIR__.'/../resources/js/components' => base_path('resources/js/components/laravel-dropzone'),
@@ -47,6 +48,12 @@ class LaravelDropzoneServiceProvider extends ServiceProvider
         if (! class_exists('CreateFilesTable')) {
             $this->publishes([
                 __DIR__.'/../database/migrations/create_files_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_files_table.php'),
+            ], 'migrations');
+        }
+
+        if (! class_exists('CreateFileFoldersTable')) {
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_file_folders_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_file_folders_table.php'),
             ], 'migrations');
         }
     }

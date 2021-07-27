@@ -3,12 +3,16 @@
 namespace DanJamesMills\LaravelDropzone\Classes;
 
 use DanJamesMills\LaravelDropzone\Models\File;
+use Illuminate\Support\Facades\Storage;
 
 class FileUploader
 {
     private $uploadType;
+
     private $request;
+
     private $file;
+
     private $newFileName;
 
     public function __construct($request)

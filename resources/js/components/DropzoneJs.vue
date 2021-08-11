@@ -1,13 +1,13 @@
 <template>
-  <div class="dropzone dropzone-default mb-8">
+<div class="dropzone dropzone-default mb-8">
     <div class="dropzone-msg dz-message needsclick">
-      <i class="fas fa-file-alt text-primary display-1 mb-5"></i>
-      <h3 class="dropzone-msg-title">Drop files here or <a href="javascript:void(0)">click to upload</a>.</h3>
-      <br />
-      <span class="dropzone-msg-desc">Maximum file size is <strong>{{ maxFileSizeInMb }} MB</strong>.</span><br />
-      <span class="dropzone-msg-desc">Accepted file types <strong>{{ allowedFileTypes }}</strong>.</span>
+        <i class="fas fa-file-alt text-primary display-1 mb-5"></i>
+        <h3 class="dropzone-msg-title">Drop files here or <a href="javascript:void(0)">click to upload</a>.</h3>
+        <br />
+        <span class="dropzone-msg-desc">Maximum file size is <strong>{{ maxFileSizeInMb }} MB</strong>.</span><br />
+        <span class="dropzone-msg-desc" style="width: 70%">Accepted file types <strong>{{ allowedFileTypes }}</strong>.</span>
     </div>
-  </div>
+</div>
 </template>
 <script>
 export default {

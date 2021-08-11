@@ -5,10 +5,12 @@ namespace DanJamesMills\LaravelDropzone\Models;
 use DanJamesMills\LaravelDropzone\Models\Traits\FileExtension;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Model
 {
-    use FileExtension;
+    use FileExtension,
+        SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +19,12 @@ class File extends Model
      */
     protected $guarded = ['id'];
 
-    protected $appends = ['downloadUrl', 'publicFilePathWithFileName', 'fileIcon', 'formatSizeUnits'];
+    protected $appends = [
+        'downloadUrl',
+        'publicFilePathWithFileName',
+        'file_icon',
+        'formatSizeUnits'
+    ];
 
     public function fileable()
     {
@@ -29,9 +36,10 @@ class File extends Model
         parent::boot();
 
         static::deleting(function ($file) {
-
-            // delete associated file from storage
-            Storage::disk($file->disk)->delete($file->getFullFilePathWithFilename());
+            if ($file->forceDeleting) {
+                Storage::disk($file->disk)
+                    ->delete($file->getFullFilePathWithFilename());
+            }
         });
     }
 
@@ -47,7 +55,9 @@ class File extends Model
 
     public function getPublicFilePathWithFileNameAttribute()
     {
-        return Storage::disk($this->disk)->url($this->filename);
+        if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
+            return Storage::disk($this->disk)->url($this->filename);
+        }
     }
 
     public function downloadFile()

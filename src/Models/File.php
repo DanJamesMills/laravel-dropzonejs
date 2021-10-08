@@ -28,7 +28,7 @@ class File extends Model
 
     public function fileable()
     {
-        return $this->morphTo();
+        return $this->morphTo('model');
     }
 
     public static function boot()

@@ -7,6 +7,7 @@ use DanJamesMills\LaravelDropzone\Classes\FileUploader;
 use DanJamesMills\LaravelDropzone\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use DanJamesMills\LaravelDropzone\Events\FileWasCreated;
 
 class FileUploadController extends Controller
 {
@@ -20,7 +21,11 @@ class FileUploadController extends Controller
     {
         $fileUploader = new FileUploader($request);
 
-        return $fileUploader->upload();
+        $file = $fileUploader->upload();
+
+        event(new FileWasCreated($file));
+
+        return $file;
     }
 
     /**

@@ -6,11 +6,21 @@ use DanJamesMills\LaravelDropzone\Models\Traits\FileExtension;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
 
 class File extends Model
 {
     use FileExtension,
-        SoftDeletes;
+        SoftDeletes,
+        LogsActivity;
+
+    protected static $logFillable = true;
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->description = "file.{$eventName}";
+    }
 
     /**
      * The attributes that are mass assignable.

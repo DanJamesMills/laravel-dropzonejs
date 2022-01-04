@@ -1,6 +1,6 @@
 <?php
 
-Route::namespace('DanJamesMills\LaravelDropzone\Http\Controllers')->middleware('web')->group(function () {
+Route::namespace('DanJamesMills\LaravelDropzone\Http\Controllers')->middleware(['web', 'auth'])->group(function () {
     Route::post('uploader', 'FileUploadController@store')
         ->name('uploader.store');
 

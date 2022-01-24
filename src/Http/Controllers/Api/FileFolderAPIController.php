@@ -2,11 +2,12 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-// use App\Http\Requests\Api\v1\CreateCallAPIRequest;
-// use App\Http\Requests\Api\v1\UpdateCallAPIRequest;
-// use App\Models\Call;
+use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderAPIRequest;
+use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderAPIRequest;
+use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Auth;
 use Response;
 
 /**
@@ -17,47 +18,33 @@ use Response;
 class FileFolderAPIController extends AppBaseController
 {
     /**
-     * Display a listing of the File Folders.
-     * GET|HEAD /calls
+     * Store a newly created file folder in storage.
+     * POST /file-folders/{object}/{id}/
      *
-     * @param $object
-     * @param $id
-     * @return Response
-     */
-    public function index($object, $id)
-    {
-        $record = ('App\\Models\\'.ucfirst($object))::findOrFail($id);
-
-        $fileFolders = $record->fileFolders()->get();
-
-        return $this->sendResponse($fileFolders->toArray(), 'File folders retrieved successfully');
-    }
-
-    /**
-     * Store a newly created Call in storage.
-     * POST /calls
-     *
-     * @param CreateCallAPIRequest $request
+     * @param CreateFileFolderAPIRequest $request
+     * @param string $model
+     * @param integer $id
      *
      * @return Response
      */
-    public function store(CreateCallAPIRequest $request, $model, $id)
+    public function store(CreateFileFolderAPIRequest $request, string $model, int $id)
     {
         $record = ('App\\Models\\'.ucfirst($model))::findOrFail($id);
 
-        $input = $request->all();
+        $fileFolder = FileFolder::create($request->validated());
 
-        /** @var Call $call */
-        $call = Call::create($input);
+        if ($request->filled('user_ids')) {
+            $fileFolder->users()->attach(array_merge($request->user_ids, [Auth::id()]));
+        }
 
-        $record->calls()->save($call);
+        $record->fileFolders()->save($fileFolder);
 
-        return $this->sendResponse($call->load('user')->toArray(), 'Call saved successfully');
+        return $this->sendResponse($fileFolder->load('user')->toArray(), 'File folder saved successfully');
     }
 
     /**
-     * Display the specified Call.
-     * GET|HEAD /calls/{id}
+     * Display the specified file folder.
+     * GET|HEAD /file-folders/{id}
      *
      * @param int $id
      *
@@ -65,43 +52,52 @@ class FileFolderAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Call $call */
-        $call = Call::find($id);
+        $fileFolder = FileFolder::with('users')->find($id);
 
-        if (empty($call)) {
-            return $this->sendError('Call not found');
+        if (empty($fileFolder)) {
+            return $this->sendError('File folder not found');
         }
 
-        return $this->sendResponse($call->toArray(), 'Call retrieved successfully');
+        if (!$fileFolder->hasAccessToFolder()) {
+            return $this->sendError('You do not have permission to access this folder.');
+        }
+
+        return $this->sendResponse($fileFolder->toArray(), 'File folder retrieved successfully');
     }
 
     /**
-     * Update the specified Call in storage.
-     * PUT/PATCH /calls/{id}
+     * Update the specified file folder in storage.
+     * PUT/PATCH /file-folder/{id}
      *
+     * @param UpdateFileFolderAPIRequest $request
      * @param int $id
-     * @param UpdateCallAPIRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateCallAPIRequest $request)
+    public function update(UpdateFileFolderAPIRequest $request, int $id)
     {
-        /** @var Call $call */
-        $call = Call::find($id);
+        $fileFolder = FileFolder::find($id);
 
-        if (empty($call)) {
-            return $this->sendError('Call not found');
+        if (empty($fileFolder)) {
+            return $this->sendError('File folder not found');
         }
 
-        $call->fill($request->all());
-        $call->save();
+        if (!$fileFolder->hasAccessToFolder()) {
+            return $this->sendError('You do not have permission to access this folder.');
+        }
 
-        return $this->sendResponse($call->toArray(), 'Call updated successfully');
+        $fileFolder->update($request->validated());
+
+        if ($request->filled('user_ids')) {
+            $fileFolder->users()->sync($request->user_ids);
+        }
+
+        return $this->sendResponse($fileFolder->toArray(), 'File folder updated successfully');
     }
 
     /**
-     * Remove the specified Call from storage.
-     * DELETE /calls/{id}
+     * Remove the specified file folder from storage.
+     * DELETE /file-folder/{id}
      *
      * @param int $id
      *
@@ -111,15 +107,18 @@ class FileFolderAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var Call $call */
-        $call = Call::find($id);
+        $fileFolder = FileFolder::find($id);
 
-        if (empty($call)) {
-            return $this->sendError('Call not found');
+        if (empty($fileFolder)) {
+            return $this->sendError('File folder not found');
         }
 
-        $call->delete();
+        if (!$fileFolder->hasAccessToFolder()) {
+            return $this->sendError('You do not have permission to access this folder.');
+        }
 
-        return $this->sendSuccess('Call deleted successfully');
+        $fileFolder->delete();
+
+        return $this->sendSuccess('File folder deleted successfully');
     }
 }

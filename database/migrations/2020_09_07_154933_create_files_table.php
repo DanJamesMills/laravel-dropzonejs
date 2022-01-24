@@ -6,10 +6,17 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateFilesTable extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('user_id')->comment('The user that created the file.');
+            $table->foreignId('file_folder_id')->nullable();
             $table->nullableMorphs('model');
             $table->uuid('token')->unique();
             $table->string('original_filename');
@@ -22,7 +29,17 @@ class CreateFilesTable extends Migration
             $table->json('custom_properties')->nullable();
             $table->unsignedInteger('order_column')->nullable();
             $table->softDeletes();
-            $table->nullableTimestamps();
+            $table->timestamps();
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('files');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DanJamesMills\LaravelDropzone\Models\Traits;
+namespace DanJamesMills\LaravelDropzone\Traits;
 
 trait FileExtension
 {

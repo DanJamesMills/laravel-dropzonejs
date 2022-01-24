@@ -75,6 +75,7 @@ class FileUploader
     private function storeFileInfoInDb()
     {
         $file = File::make([
+            'file_folder_id' => $this->request->file_folder_id,
             'token' => $this->generateToken(),
             'original_filename' => $this->request->file->getClientOriginalName(),
             'storage_filename' => $this->newFileName,

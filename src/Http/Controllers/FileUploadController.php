@@ -15,6 +15,7 @@ class FileUploadController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -29,9 +30,10 @@ class FileUploadController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Remove the specified file from storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)

@@ -29,7 +29,7 @@ class FileFolderAPIController extends AppBaseController
      */
     public function store(CreateFileFolderAPIRequest $request, string $model, int $id)
     {
-        $record = ('App\\Models\\'.ucfirst($model))::findOrFail($id);
+        $record = ($this->getModelClass($model))::findOrFail($id);
 
         $fileFolder = FileFolder::create($request->validated());
 
@@ -120,5 +120,18 @@ class FileFolderAPIController extends AppBaseController
         $fileFolder->delete();
 
         return $this->sendSuccess('File folder deleted successfully');
+    }
+
+    // TODO Create Config File
+    protected function getModelClass($className)
+    {
+        $modelClasses = [
+            'contact' => \App\Models\Contact::class,
+            'company' => \App\Models\Company::class,
+            'task' => 'DanJamesMills\Tasks\Models\Task',
+            'staff' => 'Utilda\Staff\Models\Staff',
+        ];
+
+        return $modelClasses[$className];
     }
 }

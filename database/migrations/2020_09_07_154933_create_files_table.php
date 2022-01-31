@@ -15,7 +15,7 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id')->comment('The user that created the file.');
+            $table->foreignId('user_id')->nullable()->comment('The user that created the file.');
             $table->foreignId('file_folder_id')->nullable();
             $table->nullableMorphs('model');
             $table->uuid('token')->unique();

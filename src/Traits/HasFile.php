@@ -20,6 +20,10 @@ trait HasFile
 
     public function getFileFoldersICanAccess()
     {
+        if (Auth::user()->hasPermissionTo('access_all_files')) {
+            return $this->fileFolders;
+        }
+
         $anyoneFolders = $this->fileFolders()->where('access_type', 1)->get();
 
         $onlyMe = $this->fileFolders()->where('access_type', 2)->where('user_id', Auth::id())->get();

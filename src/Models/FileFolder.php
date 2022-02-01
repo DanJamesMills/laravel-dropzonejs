@@ -126,13 +126,19 @@ class FileFolder extends Model
     {
         $userId = ($userId) ? $userId : Auth::id();
 
+        if (Auth::user()->hasPermissionTo('access_all_files')) {
+            return true;
+        }
+
         if ($this->access_type == self::ACCESS_TYPE_ANYONE) {
             return true;
-        } elseif ($this->access_type == self::ACCESS_TYPE_ONLY_YOU) {
-            return $this->checkIfIOwnFolder();
-        } else {
-            return $this->checkIfUserIsInFolderAccessList($userId);
         }
+
+        if ($this->access_type == self::ACCESS_TYPE_ONLY_YOU) {
+            return $this->checkIfIOwnFolder();
+        }
+
+        return $this->checkIfUserIsInFolderAccessList($userId);
     }
 
     /**

@@ -130,6 +130,7 @@ class FileAPIController extends AppBaseController
             'company' => \App\Models\Company::class,
             'task' => 'DanJamesMills\Tasks\Models\Task',
             'staff' => 'Utilda\Staff\Models\Staff',
+            'support-desk' => 'DanJamesMills\SupportDesk\Models\SupportTicket',
         ];
 
         return $modelClasses[$className];

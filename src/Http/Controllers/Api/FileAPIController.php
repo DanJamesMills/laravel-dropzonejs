@@ -131,6 +131,7 @@ class FileAPIController extends AppBaseController
             'task' => 'DanJamesMills\Tasks\Models\Task',
             'staff' => 'Utilda\Staff\Models\Staff',
             'support-desk' => 'DanJamesMills\SupportDesk\Models\SupportTicket',
+            'accreditation-submission' => 'DanJamesMills\Accreditation\Models\AccreditationSubmission'
         ];
 
         return $modelClasses[$className];

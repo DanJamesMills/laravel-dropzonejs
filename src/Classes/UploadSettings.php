@@ -2,7 +2,7 @@
 
 namespace DanJamesMills\LaravelDropzone\Classes;
 
-class UploadType
+class UploadSettings
 {
     /**
      * The upload type of which config we should use.
@@ -20,7 +20,6 @@ class UploadType
      * Set upload type.
      *
      * @param  string  $uploadType
-     * @return string
      */
     private function setUploadType($uploadType): void
     {
@@ -33,8 +32,6 @@ class UploadType
 
     /**
      * Check to see if config values exist for upload type.
-     *
-     * @return bool
      */
     private function checkUploadTypeExistInConfig()
     {
@@ -47,6 +44,7 @@ class UploadType
      * Remove . prefix from allowed file types so Laravel validator can use.
      *
      * @param  string  $string
+     *
      * @return string
      */
     private function removeDotPrefix($string)
@@ -58,6 +56,7 @@ class UploadType
      * Convert bytes to megabytes
      *
      * @param  int  $megabytes
+     *
      * @return int
      */
     private function formatMegabytesToBytes($megabytes)

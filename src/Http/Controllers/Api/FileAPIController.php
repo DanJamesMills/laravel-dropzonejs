@@ -38,7 +38,7 @@ class FileAPIController extends AppBaseController
 
             $currentPath = $currentFolder->getRootPath();
 
-            $files = $record->files()->whereFileFolderId($filters->getRequest()->fileFolderId)->get();
+            $files = $currentFolder->files;
 
             $folders = $record->fileFolders()->whereParentFileFolderId($filters->getRequest()->fileFolderId)->get();
         } else {

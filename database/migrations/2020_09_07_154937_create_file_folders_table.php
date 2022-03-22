@@ -21,6 +21,8 @@ class CreateFileFoldersTable extends Migration
             $table->nullableMorphs('model');
             $table->string('name');
             $table->unsignedTinyInteger('access_type')->default(FileFolder::ACCESS_TYPE_ANYONE);
+            $table->json('extra_attributes')->nullable();
+            $table->boolean('system_default')->default(false)->comment('This will be true for default folders built into CRM.');
             $table->softDeletes();
             $table->timestamps();
         });

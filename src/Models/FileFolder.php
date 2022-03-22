@@ -30,6 +30,16 @@ class FileFolder extends Model
         'type'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'extra_attributes' => 'array',
+        'system_default' => 'boolean',
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -90,6 +100,15 @@ class FileFolder extends Model
         return $this->hasMany(self::class, 'parent_file_folder_id', 'id');
     }
 
+    /**
+     * Check if a property is system default.
+     *
+     * @return bool
+     */
+    public function isSystemDefault(): bool
+    {
+        return $this->system_default;
+    }
 
     public function getAllParentFolders()
     {

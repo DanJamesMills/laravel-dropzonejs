@@ -117,6 +117,10 @@ class FileFolderAPIController extends AppBaseController
             return $this->sendError('You do not have permission to access this folder.');
         }
 
+        if ($fileFolder->isSystemDefault()) {
+            return $this->sendError('This file folder is provided by WorkCRM and cannot be deleted.', $code = 400);
+        }
+
         $fileFolder->delete();
 
         return $this->sendSuccess('File folder deleted successfully');

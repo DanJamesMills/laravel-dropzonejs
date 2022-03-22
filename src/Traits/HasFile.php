@@ -10,7 +10,7 @@ trait HasFile
 {
     public function files()
     {
-        return $this->morphMany(File::class, 'model');
+        return $this->morphToMany(File::class, 'model', 'model_has_files');
     }
 
     public function fileFolders()

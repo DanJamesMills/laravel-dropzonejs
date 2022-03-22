@@ -44,6 +44,7 @@ class File extends Model
 
         static::creating(function ($file) {
             $file->user_id = Auth::User()->id;
+            $file->token = \Str::uuid();
         });
 
         static::deleting(function ($file) {

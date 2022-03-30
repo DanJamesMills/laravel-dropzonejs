@@ -17,6 +17,8 @@ class FileDownloadController extends Controller
     {
         $file = File::whereToken($token)->firstOrFail();
 
+        return $file->previewFile();
+
         return $file->downloadFile();
     }
 }

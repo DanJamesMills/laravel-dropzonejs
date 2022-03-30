@@ -92,6 +92,13 @@ class File extends Model
         return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename(), $this->original_filename);
     }
 
+    public function previewFile()
+    {
+        return response(Storage::disk($this->disk)->get($this->getFullFilePathWithFilename()), 200)
+            ->header('Content-Type', $this->mime_type)
+            ->header('Content-Disposition', 'inline');
+    }
+
     public function getFormatSizeUnitsAttribute()
     {
         $i = floor(log($this->size, 1024));

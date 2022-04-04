@@ -134,6 +134,7 @@ class FileFolderAPIController extends AppBaseController
             'company' => \App\Models\Company::class,
             'task' => 'DanJamesMills\Tasks\Models\Task',
             'staff' => 'Utilda\Staff\Models\Staff',
+            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile'
         ];
 
         return $modelClasses[$className];

@@ -96,7 +96,7 @@ class File extends Model
     {
         return response(Storage::disk($this->disk)->get($this->getFullFilePathWithFilename()), 200)
             ->header('Content-Type', $this->mime_type)
-            ->header('Content-Disposition', 'inline');
+            ->header('Content-Disposition', 'inline; filename="'.$this->original_filename.'"');
     }
 
     public function getFormatSizeUnitsAttribute()

@@ -21,17 +21,39 @@ trait HasFile
     public function getFileFoldersICanAccess()
     {
         if (Auth::user()->hasPermissionTo('access_all_files')) {
-            return $this->fileFolders;
+            return $this->fileFolders()
+                ->whereNull('parent_file_folder_id')
+                ->get();
         }
 
-        $anyoneFolders = $this->fileFolders()->where('access_type', 1)->get();
+        return $this->getAnyoneFolders()
+            ->merge($this->getOnlyMeFolders())
+            ->merge($this->getSpecificUsersFolders());
+    }
 
-        $onlyMe = $this->fileFolders()->where('access_type', 2)->where('user_id', Auth::id())->get();
+    public function getAnyoneFolders()
+    {
+        return $this->fileFolders()
+            ->where('access_type', 1)
+            ->whereNull('parent_file_folder_id')
+            ->get();
+    }
 
-        $specificUsersFolders = $this->fileFolders()->whereHas('users', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->get();
+    public function getOnlyMeFolders()
+    {
+        return $this->fileFolders()
+            ->where('access_type', 2)
+            ->whereNull('parent_file_folder_id')
+            ->where('user_id', Auth::id())
+            ->get();
+    }
 
-        return $anyoneFolders->merge($onlyMe)->merge($specificUsersFolders);
+    public function getSpecificUsersFolders()
+    {
+        return $this->fileFolders()
+            ->where('access_type', 2)
+            ->whereNull('parent_file_folder_id')
+            ->where('user_id', Auth::id())
+            ->get();
     }
 }

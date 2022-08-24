@@ -132,7 +132,8 @@ class FileAPIController extends AppBaseController
             'staff' => 'Utilda\Staff\Models\Staff',
             'support-desk' => 'DanJamesMills\SupportDesk\Models\SupportTicket',
             'accreditation-submission' => 'DanJamesMills\Accreditation\Models\AccreditationSubmission',
-            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile'
+            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile',
+            'sheet-row' => 'DanJamesMills\Sheets\Models\Row'
         ];
 
         return $modelClasses[$className];

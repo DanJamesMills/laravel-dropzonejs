@@ -7,8 +7,6 @@ use App\Http\Controllers\AppBaseController;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
 use DanJamesMills\LaravelDropzone\Models\File;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
-use Illuminate\Http\Request;
-use Auth;
 use Response;
 
 /**

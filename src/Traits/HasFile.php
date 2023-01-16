@@ -23,6 +23,7 @@ trait HasFile
         if (Auth::user()->hasPermissionTo('access_all_files')) {
             return $this->fileFolders()
                 ->whereNull('parent_file_folder_id')
+                ->orderBy('name')
                 ->get();
         }
 

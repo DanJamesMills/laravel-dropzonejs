@@ -40,14 +40,18 @@ class FileAPIController extends AppBaseController
 
             $files = $currentFolder->files;
 
-            $folders = $record->fileFolders()->whereParentFileFolderId($filters->getRequest()->fileFolderId)->get();
+            $folders = $record->fileFolders()
+                ->whereParentFileFolderId($filters->getRequest()->fileFolderId)
+                ->orderBy('name', 'asc')
+                ->get();
         } else {
-            $files = $record->files()->whereNull('file_folder_id')->get();
+            $files = $record->files()->whereNull('file_folder_id')->orderBy('original_filename')->get();
 
             $folders = $record->getFileFoldersICanAccess();
         }
 
-        $files = $files->toBase()->merge($folders);
+
+        $files = $folders->toBase()->merge($files);
 
         $meta = [
             'data' => $files->toArray(),

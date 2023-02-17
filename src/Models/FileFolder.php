@@ -11,9 +11,9 @@ class FileFolder extends Model
 {
     use SoftDeletes;
 
-    const ACCESS_TYPE_ANYONE = 1;
-    const ACCESS_TYPE_ONLY_YOU = 2;
-    const ACCESS_TYPE_SPECIFIC_USERS = 3;
+    public const ACCESS_TYPE_ANYONE = 1;
+    public const ACCESS_TYPE_ONLY_YOU = 2;
+    public const ACCESS_TYPE_SPECIFIC_USERS = 3;
 
     /**
      * The attributes that are mass assignable.

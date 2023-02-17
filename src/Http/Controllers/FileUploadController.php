@@ -4,7 +4,6 @@ namespace DanJamesMills\LaravelDropzone\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use DanJamesMills\LaravelDropzone\Classes\FileUploader;
-use DanJamesMills\LaravelDropzone\Models\File;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use Illuminate\Http\Request;
 use DanJamesMills\LaravelDropzone\Events\FileWasCreated;

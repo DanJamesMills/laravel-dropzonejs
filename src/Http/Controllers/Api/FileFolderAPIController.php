@@ -4,9 +4,8 @@ namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderAPIRequest;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderAPIRequest;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
 use Auth;
 use Response;
 
@@ -15,7 +14,7 @@ use Response;
  * @package App\Http\Controllers\Api
  */
 
-class FileFolderAPIController extends AppBaseController
+class FileFolderAPIController extends BaseController
 {
     /**
      * Store a newly created file folder in storage.

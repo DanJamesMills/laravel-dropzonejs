@@ -3,7 +3,7 @@
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
 use DanJamesMills\LaravelDropzone\Filters\FileFilters;
-use App\Http\Controllers\AppBaseController;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
 use DanJamesMills\LaravelDropzone\Models\File;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
@@ -12,7 +12,7 @@ use Response;
 /**
  * Class FileController
  */
-class FileAPIController extends AppBaseController
+class FileAPIController extends BaseController
 {
     /**
      * Display a listing of the File.

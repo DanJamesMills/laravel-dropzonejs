@@ -6,22 +6,12 @@ use DanJamesMills\LaravelDropzone\Traits\FileExtension;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\Contracts\Activity;
 use Auth;
 
 class File extends Model
 {
-    use FileExtension,
-        SoftDeletes,
-        LogsActivity;
-
-    protected static $logFillable = true;
-
-    public function tapActivity(Activity $activity, string $eventName)
-    {
-        $activity->description = "file.{$eventName}";
-    }
+    use FileExtension;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -43,7 +33,7 @@ class File extends Model
         parent::boot();
 
         static::creating(function ($file) {
-            $file->user_id = Auth::User()->id;
+            $file->user_id = Auth::id();
             $file->token = \Str::uuid();
         });
 
@@ -82,9 +72,9 @@ class File extends Model
 
     public function getPublicFilePathWithFileNameAttribute()
     {
-        if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
-            return Storage::disk($this->disk)->url($this->filename);
-        }
+        // if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
+        //     return Storage::disk($this->disk)->url($this->filename);
+        // }
     }
 
     public function downloadFile()

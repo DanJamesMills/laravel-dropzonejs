@@ -78,7 +78,7 @@ class FileUploader
     {
         $this->fileModel = File::create([
             'file_folder_id' => $this->folderId,
-            'original_filename' => $this->file->getClientOriginalName(),
+            'original_filename' => pathinfo($this->file->getClientOriginalName(), PATHINFO_FILENAME),
             'storage_filename' => $this->newFileName,
             'mime_type' => $this->file->getMimeType(),
             'file_extension' => strtolower($this->file->getClientOriginalExtension()),

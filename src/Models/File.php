@@ -12,9 +12,9 @@ use Auth;
 
 class File extends Model
 {
-    use FileExtension,
-        SoftDeletes,
-        LogsActivity;
+    use FileExtension;
+    use SoftDeletes;
+    use LogsActivity;
 
     protected static $logFillable = true;
 
@@ -34,7 +34,8 @@ class File extends Model
         'downloadUrl',
         'publicFilePathWithFileName',
         'file_icon',
-        'formatSizeUnits',
+        'format_size_units',
+        'original_filename_with_file_extension',
         'type'
     ];
 
@@ -89,14 +90,14 @@ class File extends Model
 
     public function downloadFile()
     {
-        return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename(), $this->original_filename);
+        return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename(), $this->original_filename_with_file_extension);
     }
 
     public function previewFile()
     {
         return response(Storage::disk($this->disk)->get($this->getFullFilePathWithFilename()), 200)
             ->header('Content-Type', $this->mime_type)
-            ->header('Content-Disposition', 'inline; filename="'.$this->original_filename.'"');
+            ->header('Content-Disposition', 'inline; filename="'.$this->original_filename_with_file_extension.'"');
     }
 
     public function getFormatSizeUnitsAttribute()
@@ -104,6 +105,16 @@ class File extends Model
         $i = floor(log($this->size, 1024));
 
         return round($this->size / pow(1024, $i), [0, 0, 2, 2, 3][$i]) . ' ' . ['B', 'KB', 'MB', 'GB', 'TB'][$i];
+    }
+
+    /**
+     * Get the original filename with the file extension.
+     *
+     * @return string
+     */
+    public function getOriginalFilenameWithFileExtensionAttribute(): string
+    {
+        return $this->original_filename . '.' . $this->file_extension;
     }
 
     public function getTypeAttribute()

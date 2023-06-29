@@ -2,11 +2,15 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-use DanJamesMills\LaravelDropzone\Filters\FileFilters;
 use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
-use DanJamesMills\LaravelDropzone\Models\File;
+use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
+use DanJamesMills\LaravelDropzone\Filters\FileFilters;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
+use DanJamesMills\LaravelDropzone\Models\File;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\JsonResponse;
 use Response;
 
 /**
@@ -15,18 +19,34 @@ use Response;
 class FileAPIController extends BaseController
 {
     /**
+     * The file model class.
+     *
+     * @var string
+     */
+    protected $fileModelClass;
+
+    public function __construct()
+    {
+        $this->fileModelClass = Config::get('laravel-dropzone.file_model');
+    }
+
+    /**
      * Display a listing of the File.
      * GET|HEAD /files
      *
      * @param FileFilters $request
-     * @param string $model
+     * @param string $uploadType
      * @param integer $id
      *
      * @return Response
      */
-    public function index(FileFilters $filters, string $object, int $id)
+    public function index(FileFilters $filters, string $uploadType, int $id)
     {
-        $record = ($this->getModelClass($object))::findOrFail($id);
+        $uploadSettings = new UploadSettings($uploadType);
+
+        $record = ($uploadSettings->getModel())::findOrFail($id);
+
+        // $record->listDirectory();
 
         $currentPath = '/';
         $currentFolder = '';
@@ -99,41 +119,30 @@ class FileAPIController extends BaseController
 
     /**
      * Remove the specified File from storage.
-     * DELETE /files/{id}
+     * DELETE /files/{token}
      *
-     * @param int $id
+     * @param string $token
      *
      * @throws \Exception
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy(int $id)
+    public function destroy(string $token): JsonResponse
     {
-        $file = File::find($id);
+        $file = $this->fileModelClass::whereToken($token)->first();
 
         if (empty($file)) {
             return $this->sendError('File not found');
         }
 
+        Gate::authorize(
+            'delete-file', 
+            $file
+        );
+
         $file->delete();
 
-        return $this->sendSuccess('File deleted successfully');
+        return $this->sendSuccess('File deleted successfully.');
     }
 
-    // TODO Create Config File
-    protected function getModelClass($className)
-    {
-        $modelClasses = [
-            'contact' => \App\Models\Contact::class,
-            'company' => \App\Models\Company::class,
-            'task' => 'DanJamesMills\Tasks\Models\Task',
-            'staff' => 'Utilda\Staff\Models\Staff',
-            'support-desk' => 'DanJamesMills\SupportDesk\Models\SupportTicket',
-            'accreditation-submission' => 'DanJamesMills\Accreditation\Models\AccreditationSubmission',
-            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile',
-            'sheet-row' => 'DanJamesMills\Sheets\Models\Row'
-        ];
-
-        return $modelClasses[$className];
-    }
 }

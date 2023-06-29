@@ -2,23 +2,27 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use DanJamesMills\LaravelDropzone\Models\File;
+use Illuminate\Support\Facades\Gate;
 
-class FileDownloadController extends Controller
+class FileDownloadController
 {
     /**
-     * Find and emit download of file.
+     * Download the file with the given token.
      *
-     * @param $token
-     * @return \Illuminate\Http\Response
+     * @param string $token
+     * @return StreamedResponse
      */
-    public function download($token)
+    public function __invoke(string $token): StreamedResponse
     {
         $file = File::whereToken($token)->firstOrFail();
 
-        return $file->previewFile();
+        Gate::authorize(
+            'download-file',
+            $file
+        );
 
-        return $file->downloadFile();
+        return $file->stream();
     }
 }

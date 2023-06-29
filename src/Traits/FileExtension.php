@@ -2,63 +2,44 @@
 
 namespace DanJamesMills\LaravelDropzone\Traits;
 
+use Illuminate\Support\Arr;
+
 trait FileExtension
 {
-    public function getFileIconAttribute()
+    public function getFileIconAttribute(): string
     {
-        switch ($this->file_extension) {
-            case 'ai':
-                return 'ai.svg';
-            case 'html':
-                return 'html.svg';
-            case 'pdf':
-                return 'pdf.svg';
-            case 'xls':
-            case 'xlsx':
-                return 'xls.svg';
-            case 'csv':
-                return 'csv.svg';
-            case 'docx':
-                return 'doc.svg';
-            case 'zip':
-                return 'zip.svg';
-            case 'mp3':
-                return 'mp3.svg';
-            case 'mp4':
-                return 'mp4.svg';
-            case 'wav':
-                return 'wav.svg';
-            case 'jpg':
-            case 'jpeg':
-                return 'jpg.svg';
-            case 'jpeg':
-                return 'jpg.svg';
-            case 'png':
-                return 'png.svg';
-            case 'bmp':
-                return 'bmp.svg';
-            case 'txt':
-                return 'txt.svg';
-            case 'avi':
-                return 'avi.svg';
-            case 'txt':
-                return 'txt.svg';
-            case 'indd':
-                return 'indd.svg';
-            case 'eps':
-                return 'eps.svg';
-            case 'ppt':
-            case 'pptx':
-                return 'ppt.svg';
-            case 'psd':
-                return 'psd.svg';
-            case 'msg':
-                return 'msg.svg';
-            case 'html':
-            case 'htm':
-                return 'html.svg';
-            default:
-                return 'txt.svg';
-        }
+        $defaultExtensions = [
+            'ai' => 'ai.svg',
+            'html' => 'html.svg',
+            'pdf' => 'pdf.svg',
+            'xls' => 'xls.svg',
+            'xlsx' => 'xls.svg',
+            'csv' => 'csv.svg',
+            'docx' => 'doc.svg',
+            'zip' => 'zip.svg',
+            'mp3' => 'mp3.svg',
+            'mp4' => 'mp4.svg',
+            'wav' => 'wav.svg',
+            'jpg' => 'jpg.svg',
+            'jpeg' => 'jpg.svg',
+            'png' => 'png.svg',
+            'bmp' => 'bmp.svg',
+            'txt' => 'txt.svg',
+            'avi' => 'avi.svg',
+            'indd' => 'indd.svg',
+            'eps' => 'eps.svg',
+            'ppt' => 'ppt.svg',
+            'pptx' => 'ppt.svg',
+            'psd' => 'psd.svg',
+            'msg' => 'msg.svg',
+            'htm' => 'html.svg',
+        ];
+        
+        $additionalExtensions = config('laravel-dropzone.file_extensions', []);
+        $extensions = array_merge($defaultExtensions, $additionalExtensions);
+        
+        $extension = strtolower($this->file_extension);
+
+        return Arr::get($extensions, $extension, 'txt.svg');
     }
 }

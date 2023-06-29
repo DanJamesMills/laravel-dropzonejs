@@ -1,14 +1,12 @@
 <?php
 
-namespace DanJamesMills\LaravelDropzone\Http\Controllers;
+namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use DanJamesMills\LaravelDropzone\Classes\FileUploader;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use Illuminate\Http\Request;
-use DanJamesMills\LaravelDropzone\Events\FileWasCreated;
 
-class FileUploadController extends Controller
+class FileUploadAPIController
 {
     /**
      * Store a newly created resource in storage.
@@ -23,17 +21,14 @@ class FileUploadController extends Controller
 
         $request->validate($uploadSettings->getFileValidationRules());
 
-        $fileUploader = new FileUploader($request->file, $uploadSettings, $request->file_folder_id);
+        $file = FileUploader::upload($request->file, $uploadSettings, $request->file_folder_id);
 
-        $file = $fileUploader->upload();
+        if ($uploadSettings->hasModel() && $request->model_id) {
 
-        if ($uploadSettings->hasModel()) {
             $record = ($uploadSettings->getModel())::findOrFail($request->model_id);
 
             return $record->files()->save($file);
         }
-
-        event(new FileWasCreated($file));
 
         return $file;
     }

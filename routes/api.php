@@ -1,6 +1,15 @@
 <?php
 
-Route::group(['prefix' => 'api/v1', 'middleware' => ['web', 'auth'], 'namespace' => 'DanJamesMills\LaravelDropzone\Http\Controllers\Api'], function () {
+$middleware = config('laravel-dropzone.api_middleware', []);
+$prefix = config('laravel-dropzone.api_prefix', 'api/v1');
+
+Route::group(['prefix' => $prefix, 'middleware' => $middleware, 'namespace' => 'DanJamesMills\LaravelDropzone\Http\Controllers\Api'], function () {
+
+    Route::get('uploader/{uploadType}/settings', 'UploadSettingAPIController');
+
+    Route::post('uploader', 'FileUploadAPIController');
+
+    // Route::post('uploader/file/delete', 'FileUploadController@destroy');
 
     /* File Controller */
     Route::get('files/{object}/{id}/', 'FileAPIController@index');

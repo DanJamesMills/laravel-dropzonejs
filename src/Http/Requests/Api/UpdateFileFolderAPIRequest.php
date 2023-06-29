@@ -2,9 +2,9 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Requests\Api;
 
-use InfyOm\Generator\Request\APIRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateFileFolderAPIRequest extends APIRequest
+class UpdateFileFolderAPIRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

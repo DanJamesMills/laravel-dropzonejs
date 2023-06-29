@@ -3,12 +3,11 @@
 namespace DanJamesMills\LaravelDropzone\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use DanJamesMills\LaravelDropzone\Models\File;
 
-class FileWasCreated
+class FileDeleted
 {
-    use Dispatchable, SerializesModels;
+    use SerializesModels;
 
     public $file;
 

@@ -2,9 +2,10 @@
 
 namespace DanJamesMills\LaravelDropzone;
 
-use DanJamesMills\LaravelDropzone\View\Components\LaravelDropzone;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
+
 
 class LaravelDropzoneServiceProvider extends ServiceProvider
 {
@@ -18,9 +19,7 @@ class LaravelDropzoneServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-dropzone');
-
-        Blade::component('laravel-dropzone', LaravelDropzone::class);
+        $this->definePermissions();
 
         if ($this->app->runningInConsole()) {
             $this->registerPublishables();
@@ -34,6 +33,16 @@ class LaravelDropzoneServiceProvider extends ServiceProvider
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/laravel-dropzone.php', 'laravel-dropzone');
+    }
+
+    /**
+     * Define permission defined in the config.
+     */
+    protected function definePermissions()
+    {
+        foreach(Config::get('laravel-dropzone.permissions', []) as $permission => $policy) {
+            Gate::define($permission, $policy);
+        }
     }
 
     protected function registerPublishables(): void

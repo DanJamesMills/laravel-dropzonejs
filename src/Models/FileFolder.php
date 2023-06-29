@@ -4,6 +4,7 @@ namespace DanJamesMills\LaravelDropzone\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use DanJamesMills\LaravelDropzone\Enums\FolderAccessType;
 use Illuminate\Support\Collection;
 use Auth;
 
@@ -11,16 +12,23 @@ class FileFolder extends Model
 {
     use SoftDeletes;
 
-    public const ACCESS_TYPE_ANYONE = 1;
-    public const ACCESS_TYPE_ONLY_YOU = 2;
-    public const ACCESS_TYPE_SPECIFIC_USERS = 3;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $guarded = ['id'];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => FileFolderCreated::class,
+        'updated' => FileFolderUpdated::class,
+        'deleted' => FileFolderDeleted::class,
+    ];
 
     protected $with = [
         'users'
@@ -101,7 +109,7 @@ class FileFolder extends Model
     }
 
     /**
-     * Check if a property is system default.
+     * Check if a folder is system default.
      *
      * @return bool
      */
@@ -124,7 +132,7 @@ class FileFolder extends Model
         return $parents;
     }
 
-    public function getRootPath()
+    public function getRootPath(): array
     {
         return $this->getAllParentFolders()->map(function ($folder) {
             return [
@@ -141,20 +149,16 @@ class FileFolder extends Model
      *
      * @return boolean
      */
-    public function hasAccessToFolder(int $userId = null): bool
+    public function canAccess(int $userId = null): bool
     {
         $userId = ($userId) ? $userId : Auth::id();
 
-        if (Auth::user()->hasPermissionTo('access_all_files')) {
+        if ($this->access_type == FolderAccessType::ACCESS_TYPE_ANYONE->value) {
             return true;
         }
 
-        if ($this->access_type == self::ACCESS_TYPE_ANYONE) {
-            return true;
-        }
-
-        if ($this->access_type == self::ACCESS_TYPE_ONLY_YOU) {
-            return $this->checkIfIOwnFolder();
+        if ($this->access_type == FolderAccessType::ACCESS_TYPE_ONLY_YOU->value) {
+            return $this->isOwner();
         }
 
         return $this->checkIfUserIsInFolderAccessList($userId);
@@ -177,7 +181,7 @@ class FileFolder extends Model
      *
      * @return boolean
      */
-    public function checkIfIOwnFolder(): bool
+    public function isOwner(): bool
     {
         return $this->user_id == Auth::id();
     }

@@ -2,32 +2,60 @@
 
 namespace DanJamesMills\LaravelDropzone\Models;
 
+use DanJamesMills\LaravelDropzone\Traits\FileActions;
 use DanJamesMills\LaravelDropzone\Traits\FileExtension;
+use DanJamesMills\LaravelDropzone\Events\FileCreated;
+use DanJamesMills\LaravelDropzone\Events\FileUpdated;
+use DanJamesMills\LaravelDropzone\Events\FileDeleted;
+use DanJamesMills\LaravelDropzone\Interfaces\FileActionsInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Auth;
 
-class File extends Model
+class File extends Model implements FileActionsInterface
 {
     use FileExtension;
+    use FileActions;
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
     protected $guarded = ['id'];
 
-    protected $appends = [
-        'downloadUrl',
-        'publicFilePathWithFileName',
-        'file_icon',
-        'formatSizeUnits',
-        'type'
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => FileCreated::class,
+        'updated' => FileUpdated::class,
+        'deleted' => FileDeleted::class,
     ];
 
+    /**
+     * The attributes that should be appended to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'download_url',
+        'public_file_path_with_file_name',
+        'file_icon',
+        'format_size_units',
+        'original_filename_with_file_extension',
+        'type',
+    ];
+
+    /**
+     * Boot the model.
+     *
+     * @return void
+     */
     public static function boot()
     {
         parent::boot();
@@ -45,13 +73,18 @@ class File extends Model
         });
     }
 
+    /**
+     * Get the owning fileable model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function fileable()
     {
         return $this->morphTo('model');
     }
 
     /**
-     * The creator of the file.
+     * Get the user that uploaded the file.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -60,43 +93,58 @@ class File extends Model
         return $this->belongsTo(\App\Models\User::class);
     }
 
-    public function getDownloadUrlAttribute()
+    /**
+     * Get the download URL for the file.
+     *
+     * @return string
+     */
+    public function getDownloadUrlAttribute(): string
     {
-        return env('APP_URL').'/file/'.$this->token.'/download';
+        return env('APP_URL') . '/file/' . $this->token . '/download';
     }
 
-    public function getFullFilePathWithFilename()
+    /**
+     * Get the public file path with file name.
+     *
+     * @return string|null
+     */
+    public function getPublicFilePathWithFileNameAttribute(): ?string
     {
-        return $this->path.'/'.$this->storage_filename;
+        if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
+            return Storage::disk($this->disk)->url($this->filename);
+        }
+
+        return null;
     }
 
-    public function getPublicFilePathWithFileNameAttribute()
-    {
-        // if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
-        //     return Storage::disk($this->disk)->url($this->filename);
-        // }
-    }
-
-    public function downloadFile()
-    {
-        return Storage::disk($this->disk)->download($this->getFullFilePathWithFilename(), $this->original_filename);
-    }
-
-    public function previewFile()
-    {
-        return response(Storage::disk($this->disk)->get($this->getFullFilePathWithFilename()), 200)
-            ->header('Content-Type', $this->mime_type)
-            ->header('Content-Disposition', 'inline; filename="'.$this->original_filename.'"');
-    }
-
-    public function getFormatSizeUnitsAttribute()
+    /**
+     * Get the formatted file size.
+     *
+     * @return string
+     */
+    public function getFormatSizeUnitsAttribute(): string
     {
         $i = floor(log($this->size, 1024));
 
         return round($this->size / pow(1024, $i), [0, 0, 2, 2, 3][$i]) . ' ' . ['B', 'KB', 'MB', 'GB', 'TB'][$i];
     }
 
-    public function getTypeAttribute()
+    /**
+     * Get the original filename with the file extension.
+     *
+     * @return string
+     */
+    public function getOriginalFilenameWithFileExtensionAttribute(): string
+    {
+        return $this->original_filename . '.' . $this->file_extension;
+    }
+
+    /**
+     * Get the type of the file.
+     *
+     * @return string
+     */
+    public function getTypeAttribute(): string
     {
         return 'File';
     }

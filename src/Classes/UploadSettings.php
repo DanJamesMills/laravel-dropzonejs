@@ -95,9 +95,9 @@ class UploadSettings implements UploadSettingsInterface
      */
     public function getFileValidationRules(): array
     {
-        return dd([
-            'model_id' => ($this->getAllowsPreUpload() ? 'required' : 'nullable').'|numeric',
+        return [
+            'model_id' => ($this->getAllowsPreUpload() ? 'nullable' : 'required').'|numeric',
             'file' => 'required|file|max:'.$this->getMaxFileSizeLimit().'|mimes:'.implode(',', $this->getAllowedFileTypes()),
-        ]);
+        ];
     }
 }

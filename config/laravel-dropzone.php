@@ -38,17 +38,17 @@ return [
      * creating your own and pointing to it here.
      */
     'permissions' => [
-        'view-any-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@viewAny',
-        'view-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@view',
-        'upload-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@create',
-        'download-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@download',
-        'update-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@update',
-        'delete-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class . '@delete',
-        'access-all-folders' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class . '@viewAny',
-        'view-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class . '@view',
-        'create-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class . '@create',
-        'update-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class . '@update',
-        'delete-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class . '@delete',
+        'view-any-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@viewAny',
+        'view-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@view',
+        'upload-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@create',
+        'download-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@download',
+        'update-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@update',
+        'delete-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@delete',
+        'access-all-folders' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@viewAny',
+        'view-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@view',
+        'create-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@create',
+        'update-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@update',
+        'delete-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@delete',
     ],
 
     /*
@@ -83,6 +83,12 @@ return [
          */
 
         'model' => '',
+
+        /*
+        * This setting permits files to be uploaded prior to the model being saved.
+        * These pre-uploaded files can then be associated with the newly created model on save.
+        */
+        'allow_preupload' => true,
 
         /*
          * By default, all files uploaded will validate against the following allowed file types.

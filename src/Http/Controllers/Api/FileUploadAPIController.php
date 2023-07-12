@@ -11,13 +11,18 @@ class FileUploadAPIController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
-        $uploadSettings = new UploadSettings($request->upload_type);
+        try {
+            $uploadSettings = new UploadSettings($request->upload_type);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
 
         $request->validate($uploadSettings->getFileValidationRules());
 

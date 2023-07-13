@@ -26,7 +26,7 @@ class FileUploadAPIController
 
         $request->validate($uploadSettings->getFileValidationRules());
 
-        dd(! $request->has('model_id'));
+        dd(! $request->filled('model_id'));
 
         $file = FileUploader::upload($request->file, $uploadSettings, $request->file_folder_id, ! $request->has('model_id'));
 

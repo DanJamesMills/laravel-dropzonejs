@@ -2,16 +2,16 @@
 
 namespace DanJamesMills\LaravelDropzone\Models;
 
+use Auth;
+use DanJamesMills\LaravelDropzone\Events\FileCreated;
+use DanJamesMills\LaravelDropzone\Events\FileDeleted;
+use DanJamesMills\LaravelDropzone\Events\FileUpdated;
+use DanJamesMills\LaravelDropzone\Interfaces\FileActionsInterface;
 use DanJamesMills\LaravelDropzone\Traits\FileActions;
 use DanJamesMills\LaravelDropzone\Traits\FileExtension;
-use DanJamesMills\LaravelDropzone\Events\FileCreated;
-use DanJamesMills\LaravelDropzone\Events\FileUpdated;
-use DanJamesMills\LaravelDropzone\Events\FileDeleted;
-use DanJamesMills\LaravelDropzone\Interfaces\FileActionsInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
-use Auth;
 
 class File extends Model implements FileActionsInterface
 {
@@ -95,18 +95,14 @@ class File extends Model implements FileActionsInterface
 
     /**
      * Get the download URL for the file.
-     *
-     * @return string
      */
     public function getDownloadUrlAttribute(): string
     {
-        return env('APP_URL') . '/file/' . $this->token . '/download';
+        return env('APP_URL').'/file/'.$this->token.'/download';
     }
 
     /**
      * Get the public file path with file name.
-     *
-     * @return string|null
      */
     public function getPublicFilePathWithFileNameAttribute(): ?string
     {
@@ -118,31 +114,36 @@ class File extends Model implements FileActionsInterface
     }
 
     /**
-     * Get the formatted file size.
+     * Scope a query to only include pre-uploaded files.
      *
-     * @return string
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIsPreUpload($query)
+    {
+        return $query->where('is_pre_upload', true);
+    }
+
+    /**
+     * Get the formatted file size.
      */
     public function getFormatSizeUnitsAttribute(): string
     {
         $i = floor(log($this->size, 1024));
 
-        return round($this->size / pow(1024, $i), [0, 0, 2, 2, 3][$i]) . ' ' . ['B', 'KB', 'MB', 'GB', 'TB'][$i];
+        return round($this->size / pow(1024, $i), [0, 0, 2, 2, 3][$i]).' '.['B', 'KB', 'MB', 'GB', 'TB'][$i];
     }
 
     /**
      * Get the original filename with the file extension.
-     *
-     * @return string
      */
     public function getOriginalFilenameWithFileExtensionAttribute(): string
     {
-        return $this->original_filename . '.' . $this->file_extension;
+        return $this->original_filename.'.'.$this->file_extension;
     }
 
     /**
      * Get the type of the file.
-     *
-     * @return string
      */
     public function getTypeAttribute(): string
     {

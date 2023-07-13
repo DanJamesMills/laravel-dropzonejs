@@ -18,17 +18,19 @@ trait HasFile
 
     /**
      * Associate files with the model if they have not been associated already.
-     *
-     * @param array $tokens
-     * @return void
      */
     public function associateFiles(array $tokens): void
     {
-        File::whereIn('token', $tokens)
-            ->whereNull('model_type')
-            ->update([
-                'model_id' => $this->id, 
-                'model_type' => get_class($this)
-            ]);
+        $files = File::whereIn('token', $tokens)
+            ->isPreUpload()
+            ->get();
+
+        foreach ($files as $file) {
+            $this->files()->save($file);
+
+            $file->is_pre_upload = false;
+
+            $file->save();
+        }
     }
 }

@@ -4,8 +4,8 @@ namespace DanJamesMills\LaravelDropzone\Classes;
 
 use DanJamesMills\LaravelDropzone\Interfaces\UploadSettingsInterface;
 use DanJamesMills\LaravelDropzone\Models\File;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class FileUploader
@@ -13,14 +13,8 @@ class FileUploader
     /**
      * Upload a file into storage and save
      * the file information in the database.
-     *
-     * @param UploadedFile $file
-     * @param UploadSettingsInterface $uploadSettings
-     * @param int|null $folderId
-     *
-     * @return File
      */
-    public static function upload(UploadedFile $file, UploadSettingsInterface $uploadSettings, int $folderId = null): File
+    public static function upload(UploadedFile $file, UploadSettingsInterface $uploadSettings, int $folderId = null, bool $isPreUpload = false): File
     {
         $newFileName = static::generateRandomFileName($file);
 
@@ -41,18 +35,15 @@ class FileUploader
             'size' => $file->getSize(),
             'disk' => $uploadSettings->getDisk(),
             'path' => $uploadSettings->getPath(),
+            'is_pre_upload' => $isPreUpload,
         ]);
     }
 
     /**
      * Generate a random file name.
-     *
-     * @param UploadedFile $file
-     *
-     * @return string
      */
     private static function generateRandomFileName(UploadedFile $file): string
     {
-        return Str::uuid() . '.' . strtolower($file->getClientOriginalExtension());
+        return Str::uuid().'.'.strtolower($file->getClientOriginalExtension());
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFilesTable extends Migration
 {
@@ -25,6 +25,7 @@ class CreateFilesTable extends Migration
             $table->unsignedBigInteger('size')->nullable();
             $table->string('disk');
             $table->string('path');
+            $table->boolean('is_pre_upload')->default(false);
             $table->json('custom_properties')->nullable();
             $table->unsignedInteger('order_column')->nullable();
             $table->softDeletes();

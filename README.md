@@ -59,7 +59,7 @@ class Post extends Model
 
 ### Defining Upload Types
 
-In your laravel-dropzone.php configuration file, you'll need to establish your desired upload types. Follow the example below for guidance on structuring your own upload types:
+In your `laravel-dropzone.php` configuration file, you'll need to establish your desired upload types. Follow the example below for guidance on structuring your own upload types:
 
 ```php
 'post' => [
@@ -116,7 +116,6 @@ In your laravel-dropzone.php configuration file, you'll need to establish your d
 
 ## Usage
 
-```php
 Take full advantage of the Laravel Dropzone package with the following simple steps:
 
 1. Direct your file uploads to the API endpoint: `api/v1/uploader`. This endpoint is configured to handle all your file upload needs.
@@ -125,8 +124,31 @@ Take full advantage of the Laravel Dropzone package with the following simple st
 
 3. Optionally, you can specify the `model_id` and `folder_id` fields in your request. If `model_id` is provided, the file will be automatically linked with the corresponding model upon saving the file. Likewise, using `folder_id` will help you organise your files into a specific folder.
 
+## Attaching PreUploaded Files To Model
+
+The Laravel Dropzone package offers you the convenient feature of attaching pre-uploaded files to your models. This feature comes in handy when you wish to upload files before a model is saved or created. It allows you to maintain a robust workflow by ensuring files are readily available and associated with the model at the point of saving.
+
+To attach pre-uploaded files to your model:
+
+1. Enable the `allow_pre_upload` configuration option for your upload type in the `laravel-dropzone.php` config file. This option instructs the package to accept files before the associated model is created.
+
+2. After enabling this feature, upload files using the usual method, providing the appropriate `upload_type`.
+
+3. When creating or saving your model, make sure to save the model first before associating the files. For instance:
+
+```php
+$post = new Post;
+$post->title = $request->title;
+$post->save();
+
+// $tokens obtained from the pre-upload response
+$post->associateFiles($request->files);
 
 ```
+
+With these steps, your pre-uploaded files will be associated with the model immediately after it's saved, ensuring a streamlined and efficient process.
+
+Note: Make sure your model uses the HasFile trait to leverage the associateFiles method.
 
 ### Testing
 

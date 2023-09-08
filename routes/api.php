@@ -12,15 +12,15 @@ Route::group(['prefix' => $prefix, 'middleware' => $middleware, 'namespace' => '
     // Route::post('uploader/file/delete', 'FileUploadController@destroy');
 
     /* File Controller */
-    Route::get('files/{object}/{id}/', 'FileAPIController@index');
-    Route::get('files/{file}/', 'FileAPIController@show');
-    Route::put('files/{file}', 'FileAPIController@update');
-    Route::delete('files/{file}', 'FileAPIController@destroy');
+    Route::get('files/{object}/{id}/', 'FileApiController@index');
+    Route::get('files/{token}', 'FileApiController@show');
+    Route::put('files/{token}', 'FileApiController@update');
+    Route::delete('files/{token}', 'FileApiController@destroy');
 
-    /* File Folder API Controller */
-    Route::get('file-folders/{object}/{id}/', 'FileFolderAPIController@index');
-    Route::get('file-folders/{id}', 'FileFolderAPIController@show');
-    Route::post('file-folders/{object}/{id}', 'FileFolderAPIController@store');
-    Route::put('file-folders/{id}', 'FileFolderAPIController@update');
-    Route::delete('file-folders/{id}', 'FileFolderAPIController@destroy');
+    /* File Folder Api Controller */
+    Route::get('file-folders/{object}/{id}/', 'FileFolderApiController@index');
+    Route::get('file-folders/{id}', 'FileFolderApiController@show');
+    Route::post('file-folders/{object}/{id}', 'FileFolderApiController@store');
+    Route::put('file-folders/{id}', 'FileFolderApiController@update');
+    Route::delete('file-folders/{id}', 'FileFolderApiController@destroy');
 });

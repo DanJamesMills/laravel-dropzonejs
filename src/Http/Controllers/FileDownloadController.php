@@ -2,17 +2,14 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers;
 
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use DanJamesMills\LaravelDropzone\Models\File;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileDownloadController
 {
     /**
      * Download the file with the given token.
-     *
-     * @param string $token
-     * @return StreamedResponse
      */
     public function __invoke(string $token): StreamedResponse
     {

@@ -2,18 +2,14 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 
-class UploadSettingAPIController extends BaseController
+class UploadSettingApiController extends BaseController
 {
     /**
      * Load configuration settings for specified upload type.
-     *
-     * @param string|null $uploadType
-     *
-     * @return JsonResponse
      */
     public function __invoke(?string $uploadType): JsonResponse
     {
@@ -29,15 +25,11 @@ class UploadSettingAPIController extends BaseController
 
     /**
      * Get a comma-separated string of allowed file types with "." in front of each type.
-     *
-     * @param UploadSettings $uploadType
-     * 
-     * @return string
      */
     private function getAllowedFileTypesString(UploadSettings $uploadType): string
     {
         return implode(',', array_map(function ($type) {
-            return '.' . trim($type, '.');
+            return '.'.trim($type, '.');
         }, $uploadType->getAllowedFileTypes()));
     }
 }

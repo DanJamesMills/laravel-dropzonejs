@@ -18,18 +18,28 @@ return [
     'user_model' => \App\Models\User::class,
 
     /*
-     * Whether to automatically create API comment endpoints.
+     * Whether to automatically create dropzone web and api endpoints.
      * If this is false, you can still set up routing manually.
      */
     'autoload' => true,
 
     /*
-     * Middleware to attach to the comments endpoint (if `autoload` is true).
+     * Middleware to attach to the web endpoint (if `autoload` is true).
+     */
+    'web_middleware' => ['web', 'auth:sanctum'],
+
+    /*
+     * The prefix to use for the web endpoints.
+     */
+    'web_prefix' => '',
+
+    /*
+     * Middleware to attach to the api endpoint (if `autoload` is true).
      */
     'api_middleware' => ['api', 'auth:sanctum'],
 
     /*
-     * The prefix to use for the API comment endpoints.
+     * The prefix to use for the api endpoints.
      */
     'api_prefix' => 'api/v1',
 

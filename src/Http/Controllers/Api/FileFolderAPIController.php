@@ -2,31 +2,23 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderAPIRequest;
-use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderAPIRequest;
-use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
-use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use Auth;
+use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderApiRequest;
+use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderApiRequest;
+use DanJamesMills\LaravelDropzone\Models\FileFolder;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use Response;
 
-/**
- * Class FileFolderAPIController
- * @package App\Http\Controllers\Api
- */
-
-class FileFolderAPIController extends BaseController
+class FileFolderApiController extends BaseController
 {
     /**
      * Store a newly created file folder in storage.
      * POST /file-folders/{object}/{id}/
      *
-     * @param CreateFileFolderAPIRequest $request
-     * @param string $model
-     * @param integer $id
      *
      * @return Response
      */
-    public function store(CreateFileFolderAPIRequest $request, string $model, int $id)
+    public function store(CreateFileFolderApiRequest $request, string $model, int $id)
     {
         $record = ($this->getModelClass($model))::findOrFail($id);
 
@@ -45,8 +37,7 @@ class FileFolderAPIController extends BaseController
      * Display the specified file folder.
      * GET|HEAD /file-folders/{id}
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return Response
      */
     public function show($id)
@@ -57,7 +48,7 @@ class FileFolderAPIController extends BaseController
             return $this->sendError('File folder not found');
         }
 
-        if (!$fileFolder->hasAccessToFolder()) {
+        if (! $fileFolder->hasAccessToFolder()) {
             return $this->sendError('You do not have permission to access this folder.');
         }
 
@@ -68,12 +59,10 @@ class FileFolderAPIController extends BaseController
      * Update the specified file folder in storage.
      * PUT/PATCH /file-folder/{id}
      *
-     * @param UpdateFileFolderAPIRequest $request
-     * @param int $id
      *
      * @return Response
      */
-    public function update(UpdateFileFolderAPIRequest $request, int $id)
+    public function update(UpdateFileFolderApiRequest $request, int $id)
     {
         $fileFolder = FileFolder::find($id);
 
@@ -81,7 +70,7 @@ class FileFolderAPIController extends BaseController
             return $this->sendError('File folder not found');
         }
 
-        if (!$fileFolder->hasAccessToFolder()) {
+        if (! $fileFolder->hasAccessToFolder()) {
             return $this->sendError('You do not have permission to access this folder.');
         }
 
@@ -98,11 +87,10 @@ class FileFolderAPIController extends BaseController
      * Remove the specified file folder from storage.
      * DELETE /file-folder/{id}
      *
-     * @param int $id
+     * @param  int  $id
+     * @return Response
      *
      * @throws \Exception
-     *
-     * @return Response
      */
     public function destroy($id)
     {
@@ -112,7 +100,7 @@ class FileFolderAPIController extends BaseController
             return $this->sendError('File folder not found');
         }
 
-        if (!$fileFolder->hasAccessToFolder()) {
+        if (! $fileFolder->hasAccessToFolder()) {
             return $this->sendError('You do not have permission to access this folder.');
         }
 
@@ -133,7 +121,7 @@ class FileFolderAPIController extends BaseController
             'company' => \App\Models\Company::class,
             'task' => 'DanJamesMills\Tasks\Models\Task',
             'staff' => 'Utilda\Staff\Models\Staff',
-            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile'
+            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile',
         ];
 
         return $modelClasses[$className];

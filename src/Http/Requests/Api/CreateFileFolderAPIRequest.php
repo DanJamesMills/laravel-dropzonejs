@@ -4,7 +4,7 @@ namespace DanJamesMills\LaravelDropzone\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateFileFolderAPIRequest extends FormRequest
+class CreateFileFolderApiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class CreateFileFolderAPIRequest extends FormRequest
             'parent_file_folder_id' => 'nullable|exists:file_folders,id',
             'access_type' => 'required|in:1,2,3',
             'user_ids' => 'required_if:access_type,3',
-            'user_ids.*' => 'nullable|exists:users,id'
+            'user_ids.*' => 'nullable|exists:users,id',
         ];
     }
 }

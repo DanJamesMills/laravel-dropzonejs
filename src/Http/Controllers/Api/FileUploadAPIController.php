@@ -6,7 +6,7 @@ use DanJamesMills\LaravelDropzone\Classes\FileUploader;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use Illuminate\Http\Request;
 
-class FileUploadAPIController
+class FileUploadApiController
 {
     /**
      * Store a newly created resource in storage.

@@ -4,7 +4,7 @@ namespace DanJamesMills\LaravelDropzone\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateFileFolderAPIRequest extends FormRequest
+class UpdateFileFolderApiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class UpdateFileFolderAPIRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'parent_file_folder_id' => 'nullable|exists:file_folders,id',
-            'access_type' => 'nullable|in:1,2,3'
+            'access_type' => 'nullable|in:1,2,3',
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace DanJamesMills\LaravelDropzone\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateFileAPIRequest extends FormRequest
+class UpdateFileApiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

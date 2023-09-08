@@ -2,21 +2,17 @@
 
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
-use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
-use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use DanJamesMills\LaravelDropzone\Filters\FileFilters;
+use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
-use DanJamesMills\LaravelDropzone\Models\File;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\JsonResponse;
 use Response;
 
-/**
- * Class FileController
- */
-class FileAPIController extends BaseController
+class FileApiController extends BaseController
 {
     /**
      * The file model class.
@@ -34,10 +30,7 @@ class FileAPIController extends BaseController
      * Display a listing of the File.
      * GET|HEAD /files
      *
-     * @param FileFilters $request
-     * @param string $uploadType
-     * @param integer $id
-     *
+     * @param  FileFilters  $request
      * @return Response
      */
     public function index(FileFilters $filters, string $uploadType, int $id)
@@ -70,7 +63,7 @@ class FileAPIController extends BaseController
         $meta = [
             'data' => $files->toArray(),
             'path' => $currentPath,
-            'current_folder' => $currentFolder
+            'current_folder' => $currentFolder,
         ];
 
         return $this->sendResponse($meta, 'Files retrieved successfully');
@@ -78,39 +71,46 @@ class FileAPIController extends BaseController
 
     /**
      * Display the specified File.
-     * GET|HEAD /files/{id}
+     * GET|HEAD /files/{token}
      *
-     * @param int $id
      *
      * @return Response
      */
-    public function show(int $id)
+    public function show(string $token)
     {
-        $file = File::find($id);
+        $file = $this->fileModelClass::whereToken($token)->first();
 
         if (empty($file)) {
             return $this->sendError('File not found');
         }
+
+        Gate::authorize(
+            'view-file',
+            $file
+        );
 
         return $this->sendResponse($file->toArray(), 'File retrieved successfully');
     }
 
     /**
      * Update the specified File in storage.
-     * PUT/PATCH /files/{id}
+     * PUT/PATCH /files/{token}
      *
-     * @param int $id
-     * @param UpdateFileAPIRequest $request
      *
      * @return Response
      */
-    public function update(int $id, UpdateFileAPIRequest $request)
+    public function update(string $token, UpdateFileApiRequest $request)
     {
-        $file = File::find($id);
+        $file = $this->fileModelClass::whereToken($token)->first();
 
         if (empty($file)) {
             return $this->sendError('File not found');
         }
+
+        Gate::authorize(
+            'update-file',
+            $file
+        );
 
         $file->update($request->validated());
 
@@ -121,11 +121,8 @@ class FileAPIController extends BaseController
      * Remove the specified File from storage.
      * DELETE /files/{token}
      *
-     * @param string $token
      *
      * @throws \Exception
-     *
-     * @return JsonResponse
      */
     public function destroy(string $token): JsonResponse
     {
@@ -136,7 +133,7 @@ class FileAPIController extends BaseController
         }
 
         Gate::authorize(
-            'delete-file', 
+            'delete-file',
             $file
         );
 
@@ -144,5 +141,4 @@ class FileAPIController extends BaseController
 
         return $this->sendSuccess('File deleted successfully.');
     }
-
 }

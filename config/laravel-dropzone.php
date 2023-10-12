@@ -61,6 +61,29 @@ return [
         'delete-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@delete',
     ],
 
+    /**
+     * File Extensions Mapping for Image Icons
+     *
+     * This section maps file extensions to SVG icons. Customise or extend this list by adding entries with file
+     * extensions as keys and SVG image file names as values.
+     *
+     * Example:
+     * 'pdf' => 'pdf-icon.svg',
+     *
+     * This associates the '.pdf' extension with the 'pdf-icon.svg' image.
+     */
+    'file_extensions' => [
+        // 'ai' => 'ai.svg',
+    ],
+
+    /**
+     * URL Path for File Extension Icons
+     *
+     * Customise this URL path to specify the location of SVG icons used to represent file
+     * extensions in your application's UI. By default, it points to 'images/icons'.
+     */
+    'file_extension_icon_url_path' => url('assets/media/file-types'),
+
     /*
     |--------------------------------------------------------------------------
     | Default Upload Settings

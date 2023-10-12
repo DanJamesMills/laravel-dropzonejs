@@ -34,12 +34,15 @@ trait FileExtension
             'msg' => 'msg.svg',
             'htm' => 'html.svg',
         ];
-        
+
         $additionalExtensions = config('laravel-dropzone.file_extensions', []);
         $extensions = array_merge($defaultExtensions, $additionalExtensions);
-        
+
+        $iconUrlPath = config('laravel-dropzone.file_extension_icon_url_path', 'images/icons') . '/';
+
         $extension = strtolower($this->file_extension);
 
-        return Arr::get($extensions, $extension, 'txt.svg');
+        return $iconUrlPath . Arr::get($extensions, $extension, 'txt.svg');
+
     }
 }

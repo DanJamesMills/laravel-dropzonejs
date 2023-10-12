@@ -2,6 +2,9 @@
 
 namespace DanJamesMills\LaravelDropzone\Models;
 
+use DanJamesMills\LaravelDropzone\Events\FileFolderCreated;
+use DanJamesMills\LaravelDropzone\Events\FileFolderDeleted;
+use DanJamesMills\LaravelDropzone\Events\FileFolderUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DanJamesMills\LaravelDropzone\Enums\FolderAccessType;
@@ -109,6 +112,17 @@ class FileFolder extends Model
     }
 
     /**
+     * Scope a query to only include root folders.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRootFolders($query)
+    {
+        return $query->whereNull('parent_file_folder_id');
+    }
+
+    /**
      * Check if a folder is system default.
      *
      * @return bool
@@ -122,7 +136,7 @@ class FileFolder extends Model
     {
         $parents = collect([]);
 
-        $parent = $this->parent;
+        $parent = $this;
 
         while (!is_null($parent)) {
             $parents->push($parent);
@@ -132,14 +146,14 @@ class FileFolder extends Model
         return $parents;
     }
 
-    public function getRootPath(): array
+    public function getRootPath(): Collection
     {
         return $this->getAllParentFolders()->map(function ($folder) {
             return [
                 'id' => $folder->id,
                 'name' => $folder->name
             ];
-        });
+        })->reverse()->values();
     }
 
     /**

@@ -3,24 +3,30 @@
 namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
 use Auth;
+use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderApiRequest;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderApiRequest;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
+use Exception;
 use Response;
 
 class FileFolderApiController extends BaseController
 {
     /**
      * Store a newly created file folder in storage.
-     * POST /file-folders/{object}/{id}/
-     *
+     * POST /file-folders
      *
      * @return Response
      */
-    public function store(CreateFileFolderApiRequest $request, string $model, int $id)
+    public function store(CreateFileFolderApiRequest $request)
     {
-        $record = ($this->getModelClass($model))::findOrFail($id);
+        try {
+            $uploadSettings = new UploadSettings($request->model);
+            $record = $uploadSettings->getModel()::findOrFail($request->model_id);
+        } catch (\Exception $e) {
+            return $this->sendError('Model not found.');
+        }
 
         $fileFolder = FileFolder::create($request->validated());
 
@@ -111,19 +117,5 @@ class FileFolderApiController extends BaseController
         $fileFolder->delete();
 
         return $this->sendSuccess('File folder deleted successfully');
-    }
-
-    // TODO Create Config File
-    protected function getModelClass($className)
-    {
-        $modelClasses = [
-            'contact' => \App\Models\Contact::class,
-            'company' => \App\Models\Company::class,
-            'task' => 'DanJamesMills\Tasks\Models\Task',
-            'staff' => 'Utilda\Staff\Models\Staff',
-            'company-profile' => 'DanJamesMills\SettingsUi\Models\CompanyProfile',
-        ];
-
-        return $modelClasses[$className];
     }
 }

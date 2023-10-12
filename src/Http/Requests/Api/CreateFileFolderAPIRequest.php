@@ -24,6 +24,8 @@ class CreateFileFolderApiRequest extends FormRequest
     public function rules()
     {
         return [
+            'model' => 'required|string',
+            'model_id' => 'required|numeric',
             'name' => 'required|max:50',
             'parent_file_folder_id' => 'nullable|exists:file_folders,id',
             'access_type' => 'required|in:1,2,3',

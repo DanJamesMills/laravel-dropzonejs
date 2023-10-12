@@ -2,6 +2,7 @@
 
 namespace DanJamesMills\LaravelDropzone\Traits;
 
+use DanJamesMills\LaravelDropzone\Classes\Storage;
 use DanJamesMills\LaravelDropzone\Models\File;
 
 trait HasFile
@@ -14,6 +15,11 @@ trait HasFile
     public function files()
     {
         return $this->morphToMany(File::class, 'model', 'model_has_files');
+    }
+
+    public function storage(): Storage
+    {
+        return new Storage($this);
     }
 
     /**

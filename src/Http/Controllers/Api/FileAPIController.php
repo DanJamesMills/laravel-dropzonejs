@@ -33,13 +33,23 @@ class FileApiController extends BaseController
      * @param  FileFilters  $request
      * @return Response
      */
-    public function index(FileFilters $filters, string $uploadType, int $id)
+    public function index(FileFilters $filters, string $model, int $modelId)
     {
-        $uploadSettings = new UploadSettings($uploadType);
 
-        $record = ($uploadSettings->getModel())::findOrFail($id);
+        try {
+            $uploadSettings = new UploadSettings($model);
+            $record = $uploadSettings->getModel()::findOrFail($modelId);
+        } catch (\Exception $e) {
+            return $this->sendError('Model not found.');
+        }
 
-        // $record->listDirectory();
+        Gate::authorize(
+            'view-any-file',
+            $record
+        );
+
+        return $record->storage()
+            ->allFiles($filters->getRequest()->filled('fileFolderId') ? $filters->getRequest()->fileFolderId : null);
 
         $currentPath = '/';
         $currentFolder = '';

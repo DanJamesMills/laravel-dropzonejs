@@ -90,7 +90,7 @@ class File extends Model implements FileActionsInterface
      */
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(config('laravel-dropzone.user_model'));
     }
 
     /**
@@ -98,7 +98,7 @@ class File extends Model implements FileActionsInterface
      */
     public function getDownloadUrlAttribute(): string
     {
-        return env('APP_URL').'/file/'.$this->token.'/download';
+        return url("/file/$this->token/download");
     }
 
     /**
@@ -122,6 +122,29 @@ class File extends Model implements FileActionsInterface
     public function scopeIsPreUpload($query)
     {
         return $query->where('is_pre_upload', true);
+    }
+
+    /**
+     * Scope a query to only include files that are not in a folder.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNoFolder($query)
+    {
+        return $query->whereNull('file_folder_id');
+    }
+
+    /**
+     * Scope a query to only include files with a specific folder ID.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query The database query builder instance.
+     * @param int $folderId The ID of the folder to filter by.
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFolderId($query, int $folderId)
+    {
+        return $query->where('file_folder_id', $folderId);
     }
 
     /**

@@ -44,7 +44,6 @@ class File extends Model implements FileActionsInterface
      */
     protected $appends = [
         'download_url',
-        'public_file_path_with_file_name',
         'file_icon',
         'format_size_units',
         'original_filename_with_file_extension',
@@ -99,18 +98,6 @@ class File extends Model implements FileActionsInterface
     public function getDownloadUrlAttribute(): string
     {
         return url("/file/$this->token/download");
-    }
-
-    /**
-     * Get the public file path with file name.
-     */
-    public function getPublicFilePathWithFileNameAttribute(): ?string
-    {
-        if (Storage::disk($this->disk)->getVisibility($this->getFullFilePathWithFilename()) == 'public') {
-            return Storage::disk($this->disk)->url($this->filename);
-        }
-
-        return null;
     }
 
     /**

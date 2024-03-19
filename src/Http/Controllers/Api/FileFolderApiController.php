@@ -8,6 +8,7 @@ use DanJamesMills\LaravelDropzone\Http\Requests\Api\CreateFileFolderApiRequest;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderApiRequest;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
+use Illuminate\Support\Facades\Gate;
 use Exception;
 use Response;
 
@@ -27,6 +28,11 @@ class FileFolderApiController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError('Model not found.');
         }
+
+        Gate::authorize(
+            'create-file-folder',
+            $record
+        );
 
         $fileFolder = FileFolder::create($request->validated());
 

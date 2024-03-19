@@ -16,7 +16,7 @@ class FilePolicy
      */
     public function viewAny($user, Model $fileableModel): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -28,7 +28,7 @@ class FilePolicy
      */
     public function view($user, File $file): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -40,7 +40,7 @@ class FilePolicy
      */
     public function create($user, Model $fileableModel): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -52,7 +52,7 @@ class FilePolicy
      */
     public function download($user, File $file): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -64,7 +64,7 @@ class FilePolicy
      */
     public function update($user, File $file): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -76,6 +76,6 @@ class FilePolicy
      */
     public function delete($user, File $file): bool
     {
-        return true;
+        return false;
     }
 }

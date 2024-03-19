@@ -12,6 +12,7 @@ use DanJamesMills\LaravelDropzone\Traits\FileExtension;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class File extends Model implements FileActionsInterface
 {
@@ -73,13 +74,27 @@ class File extends Model implements FileActionsInterface
     }
 
     /**
-     * Get the owning fileable model.
+     * Dynamically retrieve all models associated with this file.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return \Illuminate\Support\Collection
      */
-    public function fileable()
+    public function getAllRelatedModels()
     {
-        return $this->morphTo('model');
+        $fileId = $this->id;
+
+        $relatedTypes = DB::table('model_has_files')
+            ->where('file_id', $fileId)
+            ->distinct()
+            ->pluck('model_type');
+
+        $associatedModels = collect();
+
+        foreach ($relatedTypes as $type) {
+            $relatedModels = $this->morphedByMany($type, 'model', 'model_has_files')->get();
+            $associatedModels = $associatedModels->merge($relatedModels);
+        }
+
+        return $associatedModels;
     }
 
     /**

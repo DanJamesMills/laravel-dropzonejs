@@ -31,7 +31,7 @@ class FileUploader
             'original_filename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
             'storage_filename' => $newFileName,
             'mime_type' => $file->getMimeType(),
-            'file_extension' => strtolower($file->getClientOriginalExtension()),
+            'file_extension' => strtolower($file->extension()),
             'size' => $file->getSize(),
             'disk' => $uploadSettings->getDisk(),
             'path' => $uploadSettings->getPath(),

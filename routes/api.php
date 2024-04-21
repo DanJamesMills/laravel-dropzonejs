@@ -8,6 +8,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['web', 'auth'], 'namespace'
     Route::put('files/{file}', 'FileAPIController@update');
     Route::delete('files/{file}', 'FileAPIController@destroy');
 
+    /* File Move API Controller */
+    Route::post('file-move', 'FileMoveAPIController@update');
+
     /* File Folder API Controller */
     Route::get('file-folders/{object}/{id}/', 'FileFolderAPIController@index');
     Route::get('file-folders/{id}', 'FileFolderAPIController@show');

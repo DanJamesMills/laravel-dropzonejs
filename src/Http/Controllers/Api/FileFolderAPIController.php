@@ -18,6 +18,26 @@ use Response;
 class FileFolderAPIController extends AppBaseController
 {
     /**
+     * Display a listing of the File.
+     * GET|HEAD /folders/{object}/{id}
+     *
+     * @param string $model
+     * @param integer $id
+     *
+     * @return Response
+     */
+    public function index(string $object, int $id)
+    {
+        $record = ($this->getModelClass($object))::findOrFail($id);
+
+        $folders = $record->fileFolders()
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return $this->sendResponse($folders->toArray(), 'Folders retrieved successfully');
+    }
+
+    /**
      * Store a newly created file folder in storage.
      * POST /file-folders/{object}/{id}/
      *

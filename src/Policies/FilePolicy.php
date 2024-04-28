@@ -32,13 +32,14 @@ class FilePolicy
     }
 
     /**
-     * Determine if the given user can create a new file for the fileable model.
+     * Determine if the given user can upload a new file for the fileable model.
      *
      * @param  mixed  $user
+     * @param  File  $file
      * @param  Model  $fileableModel
      * @return bool
      */
-    public function create($user, Model $fileableModel): bool
+    public function create($user, File $file, Model $fileableModel): bool
     {
         return false;
     }

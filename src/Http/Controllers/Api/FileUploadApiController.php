@@ -4,9 +4,11 @@ namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 
 use DanJamesMills\LaravelDropzone\Classes\FileUploader;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
+use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
-class FileUploadApiController
+class FileUploadApiController extends BaseController
 {
     /**
      * Store a newly created resource in storage.
@@ -21,7 +23,7 @@ class FileUploadApiController
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
-            ], 500);
+            ], 403);
         }
 
         $request->validate($uploadSettings->getFileValidationRules());
@@ -30,7 +32,16 @@ class FileUploadApiController
 
         if ($uploadSettings->hasModel() && $request->model_id) {
 
-            $record = ($uploadSettings->getModel())::findOrFail($request->model_id);
+            $record = ($uploadSettings->getModel())::find($request->model_id);
+
+            if (empty($record)) {
+                return $this->sendError('Record not found');
+            }
+
+            Gate::authorize(
+                'upload-file',
+                [$file, $record]
+            );
 
             return $record->files()->save($file);
         }

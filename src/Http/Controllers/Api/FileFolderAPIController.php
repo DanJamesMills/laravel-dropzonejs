@@ -7,7 +7,6 @@ use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileFolderAPIRequest;
 use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use Auth;
 use Response;
 
 /**
@@ -19,22 +18,40 @@ class FileFolderAPIController extends AppBaseController
 {
     /**
      * Display a listing of the File.
-     * GET|HEAD /folders/{object}/{id}
+     * GET|HEAD /file-folders/{object}/{id}
      *
      * @param string $model
      * @param integer $id
      *
      * @return Response
      */
-    public function index(string $object, int $id)
+    public function index(string $object, int $id, Request $request)
     {
         $record = ($this->getModelClass($object))::findOrFail($id);
 
-        $folders = $record->fileFolders()
-            ->orderBy('name', 'asc')
-            ->get();
+        $currentPath = '/';
+        $currentFolder = '';
 
-        return $this->sendResponse($folders->toArray(), 'Folders retrieved successfully');
+        if($request->filled('file_folder_id')) {
+            $fileFolder = FileFolder::with('subfolders')->find($request->input('file_folder_id'));
+
+            $folders = $fileFolder->subfolders;
+            $currentPath = $fileFolder->getRootPath();
+            $currentFolder = $fileFolder;
+        } else {
+            $folders = $record->fileFolders()
+                ->whereNull('parent_file_folder_id')
+                ->orderBy('name', 'asc')
+                ->get();
+        }
+
+        $meta = [
+            'data' => $folders->toArray(),
+            'path' => $currentPath,
+            'current_folder' => $currentFolder
+        ];
+
+        return $this->sendResponse($meta, 'Files retrieved successfully');
     }
 
     /**

@@ -16,7 +16,7 @@
     "require": {
         "php" : "^8.0",
         "danjamesmills/laravel-response": "^1.0",
-        "illuminate/support": "^8.0|^9.0"
+        "illuminate/support": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

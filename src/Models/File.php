@@ -11,8 +11,8 @@ use DanJamesMills\LaravelDropzone\Traits\FileActions;
 use DanJamesMills\LaravelDropzone\Traits\FileExtension;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class File extends Model implements FileActionsInterface
 {
@@ -129,7 +129,7 @@ class File extends Model implements FileActionsInterface
     /**
      * Scope a query to only include files that are not in a folder.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeNoFolder($query)
@@ -140,13 +140,25 @@ class File extends Model implements FileActionsInterface
     /**
      * Scope a query to only include files with a specific folder ID.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query The database query builder instance.
-     * @param int $folderId The ID of the folder to filter by.
+     * @param  \Illuminate\Database\Eloquent\Builder  $query The database query builder instance.
+     * @param  int  $folderId The ID of the folder to filter by.
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeFolderId($query, int $folderId)
     {
         return $query->where('file_folder_id', $folderId);
+    }
+
+    /**
+     * Scope a query to only include files with a specific collection name.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query The database query builder instance.
+     * @param  string  $collectionName The name of the collection to filter by.
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCollectionName($query, string $collectionName)
+    {
+        return $query->where('collection_name', $collectionName);
     }
 
     /**

@@ -18,6 +18,7 @@ class CreateFilesTable extends Migration
             $table->foreignId('user_id')->nullable()->comment('The user that created the file.');
             $table->foreignId('file_folder_id')->nullable();
             $table->uuid('token')->unique();
+            $table->string('collection_name')->nullable();
             $table->string('original_filename');
             $table->string('storage_filename');
             $table->string('mime_type')->nullable();

@@ -98,6 +98,7 @@ class UploadSettings implements UploadSettingsInterface
         return [
             'model_id' => ($this->getAllowsPreUpload() ? 'nullable' : 'required').'|numeric',
             'file' => 'required|file|max:'.$this->getMaxFileSizeLimit().'|mimes:'.implode(',', $this->getAllowedFileTypes()),
+            'collection_name' => 'nullable|string|max:255',
         ];
     }
 }

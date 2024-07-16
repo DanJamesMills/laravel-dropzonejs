@@ -14,8 +14,13 @@ class FileUploader
      * Upload a file into storage and save
      * the file information in the database.
      */
-    public static function upload(UploadedFile $file, UploadSettingsInterface $uploadSettings, int $folderId = null, bool $isPreUpload = false): File
-    {
+    public static function upload(
+        UploadedFile $file,
+        UploadSettingsInterface $uploadSettings,
+        int $folderId = null,
+        string $collectionName = null,
+        bool $isPreUpload = false
+    ): File {
         $newFileName = static::generateRandomFileName($file);
 
         $file->storeAs(
@@ -28,6 +33,7 @@ class FileUploader
 
         return $fileModelClass::create([
             'file_folder_id' => $folderId,
+            'collection_name' => $collectionName,
             'original_filename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
             'storage_filename' => $newFileName,
             'mime_type' => $file->getMimeType(),

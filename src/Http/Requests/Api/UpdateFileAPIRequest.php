@@ -25,6 +25,7 @@ class UpdateFileApiRequest extends FormRequest
     {
         return [
             'original_filename' => 'required|max:100',
+            'collection_name' => 'nullable|string|max:100',
         ];
     }
 }

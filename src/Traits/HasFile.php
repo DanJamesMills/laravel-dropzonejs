@@ -4,19 +4,16 @@ namespace DanJamesMills\LaravelDropzone\Traits;
 
 use DanJamesMills\LaravelDropzone\Classes\Storage;
 use DanJamesMills\LaravelDropzone\Models\File;
-use DanJamesMills\LaravelDropzone\Models\ModelHasFile;
 
 trait HasFile
 {
-    use HasFileFolder;
 
     /**
-     * Define a many-to-many relationship with the File model.
+     * Define a one-to-one polymorphic relationship with the File model.
      */
-    public function files()
+    public function file()
     {
-        return $this->morphToMany(config('laravel-dropzone.file_model'), 'model', 'model_has_files')
-            ->using(ModelHasFile::class);
+        return $this->morphOne(config('laravel-dropzone.file_model'), 'model');
     }
 
     public function storage(): Storage
@@ -34,10 +31,9 @@ trait HasFile
             ->get();
 
         foreach ($files as $file) {
-            $this->files()->save($file);
-
+            $file->model_id = $this->id;
+            $file->model_type = $this->getMorphClass();
             $file->is_pre_upload = false;
-
             $file->save();
         }
     }

@@ -8,9 +8,6 @@ return [
     'file_model' => \DanJamesMills\LaravelDropzone\Models\File::class,
 
     /*
-     * The model to use for file folders.
-     */
-    'file_folder_model' => \DanJamesMills\LaravelDropzone\Models\FileFolder::class,
 
     /*
      * This is the Auth model used by files.
@@ -54,11 +51,6 @@ return [
         'download-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@download',
         'update-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@update',
         'delete-file' => \DanJamesMills\LaravelDropzone\Policies\FilePolicy::class.'@delete',
-        'access-all-folders' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@viewAny',
-        'view-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@view',
-        'create-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@create',
-        'update-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@update',
-        'delete-file-folder' => \DanJamesMills\LaravelDropzone\Policies\FileFolderPolicy::class.'@delete',
     ],
 
     /**
@@ -82,7 +74,7 @@ return [
      * Customise this URL path to specify the location of SVG icons used to represent file
      * extensions in your application's UI. By default, it points to 'images/icons'.
      */
-    'file_extension_icon_url_path' => url('assets/media/file-types'),
+    'file_extension_icon_url_path' => env('APP_URL').'/assets/media/file-types',
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +113,7 @@ return [
         * This setting permits files to be uploaded prior to the model being saved.
         * These pre-uploaded files can then be associated with the newly created model on save.
         */
-        'allow_preupload' => true,
+        'allow_pre_upload' => true,
 
         /*
          * By default, all files uploaded will validate against the following allowed file types.
@@ -186,6 +178,12 @@ return [
          */
 
         'model' => App\Models\Contact::class,
+
+        /*
+        * This setting permits files to be uploaded prior to the model being saved.
+        * These pre-uploaded files can then be associated with the newly created model on save.
+        */
+        'allow_pre_upload' => true,
 
         /*
          * An array containing allowed file type extensions.

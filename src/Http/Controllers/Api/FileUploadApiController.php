@@ -28,7 +28,7 @@ class FileUploadApiController extends BaseController
 
         $request->validate($uploadSettings->getFileValidationRules());
 
-        $file = FileUploader::upload($request->file, $uploadSettings, $request->file_folder_id, ! $request->filled('model_id'));
+        $file = FileUploader::upload($request->file, $uploadSettings, ! $request->filled('model_id'));
 
         if ($uploadSettings->hasModel() && $request->model_id) {
 

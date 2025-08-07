@@ -66,7 +66,7 @@ class UploadSettings implements UploadSettingsInterface
      */
     public function getMaxFileSizeLimit(): int
     {
-        return config('laravel-dropzone.'.$this->uploadType.'.max_file_size', config('laravel-dropzone.default.max_file_size'));
+        return config('laravel-dropzone.'.$this->uploadType.'.max_file_size_mb', config('laravel-dropzone.default.max_file_size_mb'));
     }
 
     /**
@@ -77,6 +77,10 @@ class UploadSettings implements UploadSettingsInterface
         return config('laravel-dropzone.'.$this->uploadType.'.allowed_file_types', config('laravel-dropzone.default.allowed_file_types'));
     }
 
+    /**
+     * Check if pre-upload is allowed from config file for upload type.
+     * If not set, it will use the default setting.
+     */
     public function getAllowsPreUpload(): bool
     {
         return config('laravel-dropzone.'.$this->uploadType.'.allow_pre_upload', config('laravel-dropzone.default.allow_pre_upload'));
@@ -97,7 +101,7 @@ class UploadSettings implements UploadSettingsInterface
     {
         return [
             'model_id' => ($this->getAllowsPreUpload() ? 'nullable' : 'required').'|numeric',
-            'file' => 'required|file|max:'.$this->getMaxFileSizeLimit().'|mimes:'.implode(',', $this->getAllowedFileTypes()),
+            'file' => 'required|file|max:'.($this->getMaxFileSizeLimit() * 1024).'|mimes:'.implode(',', $this->getAllowedFileTypes()),
         ];
     }
 }

@@ -16,7 +16,6 @@ class CreateFilesTable extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_id')->nullable()->comment('The user that created the file.');
-            $table->foreignId('file_folder_id')->nullable();
             $table->uuid('token')->unique();
             $table->string('original_filename');
             $table->string('storage_filename');
@@ -25,6 +24,7 @@ class CreateFilesTable extends Migration
             $table->unsignedBigInteger('size')->nullable();
             $table->string('disk');
             $table->string('path');
+            $table->nullableMorphs('model');
             $table->boolean('is_pre_upload')->default(false);
             $table->json('custom_properties')->nullable();
             $table->unsignedInteger('order_column')->nullable();

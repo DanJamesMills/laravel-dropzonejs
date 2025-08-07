@@ -1,22 +1,27 @@
 {
     "name": "danjamesmills/laravel-dropzonejs",
-    "description": "Test",
+    "description": "A comprehensive Laravel package for effortless file management with Dropzone.js.",
     "keywords": [
-        "danjamesmills",
-        "laravel-dropzonejs"
+        "laravel",
+        "dropzone",
+        "file upload",
+        "file management",
+        "package"
     ],
     "homepage": "https://github.com/danjamesmills/laravel-dropzonejs",
     "license": "MIT",
     "type": "library",
-    "authors": [{
-        "name": "Daniel Mills",
-        "email": "daniel620@hotmail.co.uk",
-        "role": "Developer"
-    }],
+    "authors": [
+        {
+            "name": "Daniel Mills",
+            "email": "daniel620@hotmail.co.uk",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "php" : "^8.0",
-        "danjamesmills/laravel-response": "1.0.0",
-        "illuminate/support": "^8.0|^9.0"
+        "php": "^8.0|^8.1|^8.2|^8.3",
+        "danjamesmills/laravel-response": "^1.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -35,7 +40,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true

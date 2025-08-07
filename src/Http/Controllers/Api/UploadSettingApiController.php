@@ -17,7 +17,7 @@ class UploadSettingApiController extends BaseController
 
         $settings = [
             'allowed_file_types' => $this->getAllowedFileTypesString($uploadType),
-            'max_file_size' => $uploadType->getMaxFileSizeLimit(),
+            'max_file_size_in_mb' => $uploadType->getMaxFileSizeLimit(),
         ];
 
         return $this->sendResponse($settings, 'Upload settings retrieved successfully.');

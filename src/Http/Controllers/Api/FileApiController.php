@@ -5,7 +5,6 @@ namespace DanJamesMills\LaravelDropzone\Http\Controllers\Api;
 use DanJamesMills\LaravelDropzone\Classes\UploadSettings;
 use DanJamesMills\LaravelDropzone\Filters\FileFilters;
 use DanJamesMills\LaravelDropzone\Http\Requests\Api\UpdateFileAPIRequest;
-use DanJamesMills\LaravelDropzone\Models\FileFolder;
 use DanJamesMills\LaravelResponse\Http\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -35,7 +34,6 @@ class FileApiController extends BaseController
      */
     public function index(FileFilters $filters, string $model, int $modelId)
     {
-
         try {
             $uploadSettings = new UploadSettings($model);
             $record = $uploadSettings->getModel()::findOrFail($modelId);
@@ -49,34 +47,8 @@ class FileApiController extends BaseController
         );
 
         return $record->storage()
-            ->allFiles($filters->getRequest()->filled('fileFolderId') ? $filters->getRequest()->fileFolderId : null);
+            ->files;
 
-        $currentPath = '/';
-        $currentFolder = '';
-
-        if ($filters->getRequest()->filled('fileFolderId')) {
-            $currentFolder = FileFolder::findOrFail($filters->getRequest()->fileFolderId);
-
-            $currentPath = $currentFolder->getRootPath();
-
-            $files = $currentFolder->files;
-
-            $folders = $record->fileFolders()->whereParentFileFolderId($filters->getRequest()->fileFolderId)->get();
-        } else {
-            $files = $record->files()->whereNull('file_folder_id')->get();
-
-            $folders = $record->getFileFoldersICanAccess();
-        }
-
-        $files = $files->toBase()->merge($folders);
-
-        $meta = [
-            'data' => $files->toArray(),
-            'path' => $currentPath,
-            'current_folder' => $currentFolder,
-        ];
-
-        return $this->sendResponse($meta, 'Files retrieved successfully');
     }
 
     /**

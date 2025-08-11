@@ -89,11 +89,6 @@ class File extends Model implements FileActionsInterface
         return $this->morphTo();
     }
 
-    public function files()
-    {
-        return $this->morphToMany(config('laravel-dropzone.file_model'), 'model');
-    }
-
     /**
      * Get the download URL for the file.
      */

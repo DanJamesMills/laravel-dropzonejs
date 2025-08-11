@@ -7,18 +7,12 @@ use DanJamesMills\LaravelDropzone\Models\File;
 
 trait HasFile
 {
-
     /**
-     * Define a one-to-one polymorphic relationship with the File model.
+     * Many files attached to this model.
      */
-    public function file()
+    public function files()
     {
-        return $this->morphOne(config('laravel-dropzone.file_model'), 'model');
-    }
-
-    public function storage(): Storage
-    {
-        return new Storage($this);
+        return $this->morphMany(config('laravel-dropzone.file_model'), 'model');
     }
 
     /**
